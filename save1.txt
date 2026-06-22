@@ -443,215 +443,6 @@
       100% { opacity: 1; transform: translate(-50%, -50%) rotate(-2deg) scale(1); }
     }
 
-    .hero-flower {
-      position: absolute;
-      z-index: 10;
-      left: 50%;
-      bottom: min(6svh, 58px);
-      width: clamp(210px, 31vw, 365px);
-      height: clamp(390px, 58svh, 620px);
-      pointer-events: none;
-      opacity: 0;
-      transform: translateX(-50%) translateY(46px) scale(0.9);
-      transform-origin: bottom center;
-      transition:
-        opacity 900ms ease,
-        transform 1400ms cubic-bezier(.16, 1, .3, 1);
-    }
-
-    .hero-flower.visible {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0) scale(1);
-    }
-
-    .hero-flower.retreat {
-      opacity: 0.28;
-      transform: translateX(-50%) translateY(46px) scale(0.72);
-      transition-duration: 1100ms;
-    }
-
-    .hero-flower-svg {
-      width: 100%;
-      height: 100%;
-      overflow: visible;
-      filter: drop-shadow(0 28px 34px rgba(0, 0, 0, 0.34));
-    }
-
-    .hero-seed {
-      position: absolute;
-      left: 50%;
-      bottom: 2px;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: radial-gradient(circle, #fff7c9, #9df2a8 58%, transparent 70%);
-      box-shadow: 0 0 30px rgba(255, 229, 164, 0.54);
-      transform: translateX(-50%) scale(0);
-    }
-
-    .hero-flower.sprout .hero-seed {
-      animation: hero-seed-rise 1050ms cubic-bezier(.2, .9, .2, 1.25) 120ms forwards;
-    }
-
-    @keyframes hero-seed-rise {
-      0% { opacity: 0; transform: translateX(-50%) scale(0); }
-      58% { opacity: 1; transform: translateX(-50%) scale(1.35); }
-      100% { opacity: 0.76; transform: translateX(-50%) scale(0.8); }
-    }
-
-    .hero-stem {
-      fill: none;
-      stroke-width: 7;
-      stroke-linecap: round;
-      stroke-dasharray: 1;
-      stroke-dashoffset: 1;
-    }
-
-    .hero-flower.sprout .hero-stem {
-      animation: stem-draw 2600ms cubic-bezier(.16, 1, .3, 1) 620ms forwards;
-    }
-
-    .hero-leaf {
-      opacity: 0;
-      transform-box: fill-box;
-      transform-origin: center center;
-      transform: scale(0.08) rotate(var(--leaf-rotate));
-    }
-
-    .hero-flower.sprout .hero-leaf {
-      animation: leaf-open 1360ms cubic-bezier(.18, .95, .2, 1.18) var(--leaf-delay) forwards;
-    }
-
-    .hero-bud {
-      transform-box: view-box;
-      transform-origin: 120px 100px;
-      opacity: 0;
-      transform: translateY(52px) scale(0.2);
-    }
-
-    .hero-flower.sprout .hero-bud {
-      animation: hero-bud-rise 1450ms cubic-bezier(.2, .9, .2, 1.16) 3180ms forwards;
-    }
-
-    @keyframes hero-bud-rise {
-      0% { opacity: 0; transform: translateY(52px) scale(0.2); }
-      62% { opacity: 1; transform: translateY(-5px) scale(1.06); }
-      100% { opacity: 0.9; transform: translateY(0) scale(1); }
-    }
-
-    .hero-bud-shell {
-      fill: #73cf8e;
-    }
-
-    .hero-bud-shell-left,
-    .hero-bud-shell-right {
-      transform-box: view-box;
-      transform-origin: 120px 112px;
-    }
-
-    .hero-flower.bloom .hero-bud-shell-left {
-      animation: hero-bud-left-open 1420ms cubic-bezier(.2, .8, .16, 1) 520ms forwards;
-    }
-
-    .hero-flower.bloom .hero-bud-shell-right {
-      animation: hero-bud-right-open 1420ms cubic-bezier(.2, .8, .16, 1) 520ms forwards;
-    }
-
-    @keyframes hero-bud-left-open {
-      0% { opacity: 1; transform: rotate(0deg) translateY(0) scale(1); }
-      70% { opacity: 0.85; transform: rotate(-34deg) translate(-8px, 8px) scale(0.92); }
-      100% { opacity: 0.12; transform: rotate(-54deg) translate(-14px, 16px) scale(0.8); }
-    }
-
-    @keyframes hero-bud-right-open {
-      0% { opacity: 1; transform: rotate(0deg) translateY(0) scale(1); }
-      70% { opacity: 0.85; transform: rotate(34deg) translate(8px, 8px) scale(0.92); }
-      100% { opacity: 0.12; transform: rotate(54deg) translate(14px, 16px) scale(0.8); }
-    }
-
-    .hero-sepal {
-      opacity: 0;
-      transform-box: view-box;
-      transform-origin: 120px 112px;
-      transform: scale(0.2) rotate(var(--sepal-closed));
-    }
-
-    .hero-flower.bloom .hero-sepal {
-      animation: sepal-open 1180ms cubic-bezier(.18, .9, .2, 1.08) calc(420ms + var(--sepal-delay)) forwards;
-    }
-
-    .hero-bloom {
-      transform-box: view-box;
-      transform-origin: 120px 92px;
-      transform: translateY(16px) scale(0.62);
-    }
-
-    .hero-flower.bloom .hero-bloom {
-      animation:
-        hero-head-rise 1380ms cubic-bezier(.18, .9, .2, 1.08) 720ms both,
-        hero-flower-idle 4.8s ease-in-out 4700ms infinite alternate;
-    }
-
-    @keyframes hero-head-rise {
-      0% { transform: translateY(22px) scale(0.56) rotate(-1deg); }
-      64% { transform: translateY(-4px) scale(1.05) rotate(0.8deg); }
-      100% { transform: translateY(0) scale(1) rotate(0deg); }
-    }
-
-    @keyframes hero-flower-idle {
-      to { transform: rotate(1.8deg) translateY(-2px); }
-    }
-
-    .hero-petal-ring {
-      transform-box: view-box;
-      transform-origin: 120px 92px;
-      opacity: 0;
-      transform: translateY(24px) scale(0.08, 0.22) rotate(calc(var(--ring-rotate) - 11deg));
-    }
-
-    .hero-flower.bloom .hero-petal-ring {
-      animation: hero-petal-open var(--ring-duration) cubic-bezier(.16, .82, .18, 1.03) var(--ring-delay) forwards;
-    }
-
-    @keyframes hero-petal-open {
-      0% { opacity: 0; transform: translateY(24px) scale(0.08, 0.22) rotate(calc(var(--ring-rotate) - 11deg)); }
-      34% { opacity: 0.9; transform: translateY(8px) scale(0.46, 0.72) rotate(calc(var(--ring-rotate) - 5deg)); }
-      74% { opacity: 1; transform: translateY(-3px) scale(1.08, 1.04) rotate(calc(var(--ring-rotate) + 1.2deg)); }
-      100% { opacity: 1; transform: translateY(0) scale(1) rotate(var(--ring-rotate)); }
-    }
-
-    .hero-petal {
-      stroke: rgba(255, 255, 255, 0.12);
-      stroke-width: 0.48;
-    }
-
-    .hero-center {
-      opacity: 0;
-      transform-box: view-box;
-      transform-origin: 120px 92px;
-      transform: scale(0.2);
-    }
-
-    .hero-flower.bloom .hero-center {
-      animation: center-pop 960ms cubic-bezier(.2, .9, .2, 1.24) 3820ms forwards;
-    }
-
-    .hero-dew {
-      opacity: 0;
-      transform-box: fill-box;
-      transform-origin: center;
-      transform: scale(0);
-    }
-
-    .hero-flower.bloom .hero-dew {
-      animation: dew-twinkle 2800ms ease-in-out var(--dew-delay) infinite;
-    }
-
-    .stage.hero-flower-mode .caption[data-mood="aside"] {
-      top: 25%;
-      transform: translate(-50%, -50%) rotate(-1.2deg);
-    }
-
     .garden {
       position: absolute;
       z-index: 9;
@@ -1174,47 +965,23 @@
       }
 
       .caption[data-mood="flowers"] {
-        top: 38%;
+        top: 40%;
       }
 
       .caption[data-mood="rose"] {
-        top: 29%;
+        top: 30%;
       }
 
       .caption[data-mood="vow"] .caption-text {
         font-size: clamp(2.35rem, 11vw, 4.2rem);
       }
 
-      .caption[data-mood="breath"] .caption-text,
-      .caption[data-mood="aside"] .caption-text,
-      .caption[data-mood="flowers"] .caption-text {
-        font-size: clamp(1.45rem, 6.6vw, 2.28rem);
-      }
-
       .caption[data-mood="rose"] .caption-text {
-        font-size: clamp(1.85rem, 8.2vw, 3.15rem);
+        font-size: clamp(1.65rem, 7.5vw, 2.85rem);
       }
 
       .garden {
-        height: 46svh;
-      }
-
-      .hero-flower {
-        bottom: max(-22px, calc(env(safe-area-inset-bottom) - 24px));
-        width: min(336px, 84vw);
-        height: min(586px, 67svh);
-      }
-
-      .hero-flower-svg {
-        filter: none;
-      }
-
-      .stage.hero-flower-mode .caption[data-mood="aside"] {
-        top: 24%;
-      }
-
-      .stage.hero-flower-mode .caption[data-mood="flowers"] {
-        top: 22%;
+        height: 42svh;
       }
 
       .aurora {
@@ -1243,7 +1010,7 @@
       }
 
       .portrait {
-        width: min(386px, 86vw);
+        width: min(330px, 78vw);
         border-radius: 28px;
         box-shadow:
           0 26px 70px rgba(0,0,0,0.38),
@@ -1260,18 +1027,10 @@
         gap: 8px;
       }
 
-      .keepsake h2 {
-        font-size: clamp(2.15rem, 9.8vw, 3.6rem);
-      }
-
-      .keepsake p {
-        font-size: clamp(1.02rem, 4.4vw, 1.32rem);
-      }
-
       .final-line {
         bottom: max(58px, env(safe-area-inset-bottom));
         border-radius: 22px;
-        font-size: clamp(1.08rem, 4.95vw, 1.48rem);
+        font-size: clamp(1rem, 4.6vw, 1.32rem);
         backdrop-filter: none;
       }
 
@@ -1355,8 +1114,6 @@
 
     <p class="final-line" id="finalLine">I love you. I'm with you. And everything will be okay.</p>
 
-    <div class="hero-flower" id="heroFlower" aria-hidden="true"></div>
-
     <div class="garden" id="garden" aria-hidden="true">
       <div class="garden-glow"></div>
     </div>
@@ -1384,7 +1141,6 @@
     const captionKicker = document.getElementById("captionKicker");
     const captionText = document.getElementById("captionText");
     const systemLabel = document.getElementById("systemLabel");
-    const heroFlower = document.getElementById("heroFlower");
     const garden = document.getElementById("garden");
     const nameReveal = document.getElementById("nameReveal");
     const photoScene = document.getElementById("photoScene");
@@ -1414,7 +1170,6 @@
       gardenBuilt: false,
       gardenBuilding: false,
       gardenJobs: [],
-      heroFlowerBuilt: false,
       weatherShift: { active: false, start: 0, duration: 7600, progress: 0 },
       rainStars: [],
       fireflies: [],
@@ -1434,9 +1189,9 @@
       { t: 3500, mood: 0.3, text: "I'm here...", moodName: "vow", aura: "rose", weather: "begin" },
       { t: 5200, mood: 0.38, text: "And yes, I know...\nthis is technically a tiny website,\nso maybe I'm being a little dramatic...", moodName: "aside" },
       { t: 4300, mood: 0.47, text: "But I had to do something.\nBecause someone very important to me\nhad a rough day.", moodName: "breath" },
-      { t: 5400, mood: 0.56, text: "And I know how much you like flowers.\nI wish I could hand them to you right now...", moodName: "flowers", heroFlowerPreview: true },
-      { t: 6100, mood: 0.64, text: "But since I can't...\nI made some for you.", moodName: "aside", heroFlower: true, aura: "gold" },
-      { t: 4300, mood: 0.72, text: "So here they are...\nFor you.", moodName: "flowers", heroFlowerRetreat: true, flowers: true, aura: "gold" },
+      { t: 4700, mood: 0.56, text: "And I know how much you like flowers.\nI wish I could hand them to you right now...", moodName: "flowers" },
+      { t: 3600, mood: 0.64, text: "But since I can't...\nI made some for you.", moodName: "aside", flowers: true, aura: "gold" },
+      { t: 4200, mood: 0.72, text: "So here they are...\nFor you.", moodName: "flowers", flowers: true, aura: "gold" },
       { t: 4700, mood: 0.8, text: "Because today should have been gentler with you.\nAnd if I can't fix all of it...\nI still want to make this moment feel soft.", moodName: "flowers", flowers: true },
       { t: 3900, mood: 0.88, text: "And Shahaf...\nyour smile is its own little kind of magic...", moodName: "rose", flowers: true },
       { t: 5200, mood: 0.94, text: "When you smile,\nthe world seems to smile with you.\nIt makes bad days look confused.", moodName: "rose", flowers: true, aura: "rose" },
@@ -1531,17 +1286,6 @@
       state.gardenBuilding = false;
     }
 
-    function ensureHeroFlowerBuilt() {
-      if (state.heroFlowerBuilt) return;
-      heroFlower.innerHTML = createHeroFlowerSvg();
-      state.heroFlowerBuilt = true;
-    }
-
-    function resetHeroFlower() {
-      heroFlower.classList.remove("visible", "sprout", "bloom", "retreat");
-      stage.classList.remove("hero-flower-mode");
-    }
-
     function buildGarden(progressive = true) {
       if (state.gardenBuilt || state.gardenBuilding) return;
       const fragment = document.createDocumentFragment();
@@ -1559,9 +1303,9 @@
       ];
       const rows = state.isPhone
         ? [
-          { count: 7, size: [56, 82], bottom: 94, delay: [0, 900], z: 1 },
-          { count: 8, size: [76, 112], bottom: 38, delay: [360, 1600], z: 2 },
-          { count: 6, size: [106, 148], bottom: -28, delay: [840, 2300], z: 3 }
+          { count: 7, size: [44, 64], bottom: 72, delay: [0, 900], z: 1 },
+          { count: 8, size: [60, 90], bottom: 26, delay: [360, 1600], z: 2 },
+          { count: 6, size: [84, 118], bottom: -22, delay: [840, 2300], z: 3 }
         ]
         : [
           { count: 11, size: [42, 62], bottom: 72, delay: [0, 1100], z: 1 },
@@ -1707,15 +1451,14 @@
     }
 
     function petalPath(angleDeg, length, width) {
-      return petalPathAt(60, 58, angleDeg, length, width, 4);
-    }
-
-    function petalPathAt(cx, cy, angleDeg, length, width, inner = 4) {
+      const cx = 60;
+      const cy = 58;
       const theta = (angleDeg * Math.PI) / 180;
       const ux = Math.sin(theta);
       const uy = -Math.cos(theta);
       const px = Math.cos(theta);
       const py = Math.sin(theta);
+      const inner = 4;
       const tip = { x: cx + ux * length, y: cy + uy * length };
       const leftBase = { x: cx + ux * inner + px * width * 0.35, y: cy + uy * inner + py * width * 0.35 };
       const rightBase = { x: cx + ux * inner - px * width * 0.35, y: cy + uy * inner - py * width * 0.35 };
@@ -1725,79 +1468,6 @@
       const rightC2 = { x: cx + ux * (length * 0.32) - px * width, y: cy + uy * (length * 0.32) - py * width };
       const p = n => n.toFixed(1);
       return `M ${p(leftBase.x)} ${p(leftBase.y)} C ${p(leftC1.x)} ${p(leftC1.y)} ${p(leftC2.x)} ${p(leftC2.y)} ${p(tip.x)} ${p(tip.y)} C ${p(rightC1.x)} ${p(rightC1.y)} ${p(rightC2.x)} ${p(rightC2.y)} ${p(rightBase.x)} ${p(rightBase.y)} Z`;
-    }
-
-    function createHeroFlowerSvg() {
-      const rings = [
-        { n: 12, length: 82, width: 27, delay: 1120, duration: 1820, alpha: 0.8, rotate: 0, fill: "heroOuterPetals" },
-        { n: 9, length: 66, width: 24, delay: 1560, duration: 1660, alpha: 0.92, rotate: 16, fill: "heroMiddlePetals" },
-        { n: 7, length: 48, width: 19, delay: 2020, duration: 1460, alpha: 1, rotate: 28, fill: "heroInnerPetals" }
-      ];
-      let ringsMarkup = "";
-      for (const ring of rings) {
-        let petals = "";
-        for (let i = 0; i < ring.n; i++) {
-          const angle = (360 / ring.n) * i + ring.rotate;
-          const length = ring.length * (0.94 + Math.random() * 0.12);
-          const width = ring.width * (0.92 + Math.random() * 0.12);
-          petals += `<path class="hero-petal" d="${petalPathAt(120, 92, angle, length, width, 7)}" fill="url(#${ring.fill})" opacity="${ring.alpha}"></path>`;
-        }
-        ringsMarkup += `<g class="hero-petal-ring" style="--ring-delay:${ring.delay}ms;--ring-duration:${ring.duration}ms;--ring-rotate:${ring.rotate / 9}deg">${petals}</g>`;
-      }
-
-      return `
-        <span class="hero-seed"></span>
-        <svg class="hero-flower-svg" viewBox="0 0 240 470" aria-hidden="true">
-          <defs>
-            <linearGradient id="heroStemGradient" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0" stop-color="#9dffb9"/>
-              <stop offset="1" stop-color="#225f43"/>
-            </linearGradient>
-            <linearGradient id="heroLeafGradient" x1="0" x2="1" y1="0" y2="1">
-              <stop offset="0" stop-color="#a9f5b8"/>
-              <stop offset="0.58" stop-color="#4fbf72"/>
-              <stop offset="1" stop-color="#226144"/>
-            </linearGradient>
-            <linearGradient id="heroOuterPetals" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0" stop-color="#ffd4df"/>
-              <stop offset="0.52" stop-color="#ff8caf"/>
-              <stop offset="1" stop-color="#c9386c"/>
-            </linearGradient>
-            <linearGradient id="heroMiddlePetals" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0" stop-color="#fff0b9"/>
-              <stop offset="0.48" stop-color="#ffb5cb"/>
-              <stop offset="1" stop-color="#e85c8c"/>
-            </linearGradient>
-            <linearGradient id="heroInnerPetals" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0" stop-color="#fff7cf"/>
-              <stop offset="1" stop-color="#ff91b7"/>
-            </linearGradient>
-            <radialGradient id="heroCenterGradient">
-              <stop offset="0" stop-color="#fff9b7"/>
-              <stop offset="0.55" stop-color="#f7b84b"/>
-              <stop offset="1" stop-color="#8b4c24"/>
-            </radialGradient>
-          </defs>
-          <path class="hero-stem" pathLength="1" d="M120 456 C92 372 146 290 119 210 C103 162 132 124 120 74" stroke="url(#heroStemGradient)"/>
-          <path class="hero-leaf" style="--leaf-delay:1900ms;--leaf-rotate:-7deg" d="M116 318 C42 278 36 200 112 238 C150 257 152 300 116 318Z" fill="url(#heroLeafGradient)"/>
-          <path class="hero-leaf" style="--leaf-delay:2260ms;--leaf-rotate:7deg" d="M124 258 C203 212 207 144 128 184 C91 204 89 244 124 258Z" fill="url(#heroLeafGradient)"/>
-          <path class="hero-leaf" style="--leaf-delay:2620ms;--leaf-rotate:-3deg" d="M116 382 C58 358 44 306 112 328 C150 342 150 372 116 382Z" fill="url(#heroLeafGradient)"/>
-          <g class="hero-bud">
-            <path class="hero-sepal" style="--sepal-delay:0ms;--sepal-closed:-7deg;--sepal-open:-52deg" d="M120 112 C100 100 94 76 116 62 C124 83 130 100 120 112Z" fill="url(#heroLeafGradient)"/>
-            <path class="hero-sepal" style="--sepal-delay:120ms;--sepal-closed:7deg;--sepal-open:52deg" d="M120 112 C140 100 146 76 124 62 C116 83 110 100 120 112Z" fill="url(#heroLeafGradient)"/>
-            <path class="hero-sepal" style="--sepal-delay:220ms;--sepal-closed:0deg;--sepal-open:-8deg" d="M120 122 C108 104 107 80 120 62 C133 80 132 104 120 122Z" fill="url(#heroLeafGradient)"/>
-            <path class="hero-bud-shell hero-bud-shell-left" d="M120 62 C88 78 86 124 120 136 C114 112 112 84 120 62Z"/>
-            <path class="hero-bud-shell hero-bud-shell-right" d="M120 62 C152 78 154 124 120 136 C126 112 128 84 120 62Z"/>
-          </g>
-          <g class="hero-bloom">
-            ${ringsMarkup}
-            <circle class="hero-center" cx="120" cy="92" r="18" fill="url(#heroCenterGradient)"/>
-            <circle class="hero-dew" cx="88" cy="54" r="2.2" fill="rgba(255,255,255,0.86)" style="--dew-delay:4320ms"/>
-            <circle class="hero-dew" cx="151" cy="48" r="1.8" fill="rgba(255,246,196,0.78)" style="--dew-delay:4760ms"/>
-            <circle class="hero-dew" cx="137" cy="126" r="1.6" fill="rgba(255,255,255,0.74)" style="--dew-delay:5180ms"/>
-          </g>
-        </svg>
-      `;
     }
 
     function setupCanvas() {
@@ -2260,27 +1930,6 @@
     async function showScene(scene, id) {
       setMood(scene.mood);
       if (scene.weather === "begin") startWeatherShift();
-      if (scene.heroFlowerPreview) {
-        ensureHeroFlowerBuilt();
-        heroFlower.classList.remove("retreat");
-        stage.classList.add("hero-flower-mode");
-        requestAnimationFrame(() => heroFlower.classList.add("visible", "sprout"));
-      }
-      if (scene.heroFlower) {
-        ensureHeroFlowerBuilt();
-        heroFlower.classList.remove("retreat");
-        stage.classList.add("hero-flower-mode");
-        requestAnimationFrame(() => heroFlower.classList.add("visible", "sprout", "bloom"));
-        if (!reducedMotion) {
-          setTimeout(() => createBurst(state.w * 0.5, state.h * 0.66, 16, "gold", 0.25), 1700);
-          setTimeout(() => createBurst(state.w * 0.5, state.h * 0.48, 24, "rose", 0.34), 4200);
-        }
-      }
-      if (scene.heroFlowerRetreat) {
-        ensureHeroFlowerBuilt();
-        stage.classList.remove("hero-flower-mode");
-        heroFlower.classList.add("retreat");
-      }
       if (scene.flowers) {
         ensureGardenBuilt();
         garden.classList.add("visible");
@@ -2321,7 +1970,6 @@
       photoScene.classList.remove("final");
       nameReveal.classList.remove("visible");
       nameReveal.classList.remove("behind-photo");
-      resetHeroFlower();
       caption.classList.remove("visible");
       garden.classList.remove("visible");
       systemLabel.classList.remove("visible");
