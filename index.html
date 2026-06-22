@@ -127,7 +127,7 @@
       z-index: 3;
       top: clamp(26px, 7svh, 78px);
       right: clamp(22px, 9vw, 120px);
-      width: clamp(76px, 13vw, 148px);
+      width: clamp(88px, 15vw, 168px);
       aspect-ratio: 1;
       border-radius: 50%;
       opacity: var(--moon-a);
@@ -952,6 +952,7 @@
       opacity: 1;
       visibility: visible;
       transform: translateY(0) scale(1);
+      pointer-events: auto;
     }
 
     .photo-scene.final .keepsake h2,
@@ -1011,6 +1012,7 @@
       background:
         radial-gradient(circle at 50% 28%, #ffe8bd, transparent 18%),
         linear-gradient(145deg, #403865, #d684a0 52%, #ffd5a5);
+      cursor: zoom-in;
     }
 
     .portrait-frame img {
@@ -1022,6 +1024,62 @@
 
     .portrait-frame.has-photo img {
       display: block;
+    }
+
+    .portrait-frame.has-photo {
+      pointer-events: auto;
+    }
+
+    .photo-lightbox {
+      position: fixed;
+      z-index: 60;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: max(20px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom));
+      background: rgba(5, 6, 18, 0.84);
+      backdrop-filter: blur(14px);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 420ms ease, visibility 420ms;
+    }
+
+    .photo-lightbox.visible {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .photo-lightbox img {
+      max-width: min(94vw, 760px);
+      max-height: min(88svh, 980px);
+      border-radius: 24px;
+      box-shadow:
+        0 34px 110px rgba(0,0,0,0.55),
+        0 0 72px rgba(255, 176, 203, 0.28);
+      object-fit: contain;
+      transform: translateY(16px) scale(0.96);
+      transition: transform 520ms cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .photo-lightbox.visible img {
+      transform: translateY(0) scale(1);
+    }
+
+    .lightbox-close {
+      position: fixed;
+      top: max(14px, env(safe-area-inset-top));
+      right: 14px;
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255,255,255,0.24);
+      border-radius: 999px;
+      color: #fff8eb;
+      background: rgba(20, 18, 38, 0.54);
+      font-size: 1.45rem;
+      line-height: 1;
+      cursor: pointer;
     }
 
     .mock-face-wrap {
@@ -1101,7 +1159,7 @@
       position: absolute;
       z-index: 19;
       left: 50%;
-      bottom: clamp(86px, 13svh, 132px);
+      bottom: clamp(116px, 17svh, 176px);
       width: min(760px, calc(100vw - 32px));
       transform: translateX(-50%) translateY(16px);
       opacity: 0;
@@ -1273,7 +1331,7 @@
       .moon {
         top: clamp(24px, 5.2svh, 58px);
         right: clamp(22px, 7vw, 64px);
-        width: clamp(94px, 24vw, 136px);
+        width: clamp(112px, 29vw, 158px);
       }
 
       .garden {
@@ -1350,7 +1408,7 @@
       }
 
       .final-line {
-        bottom: max(104px, calc(env(safe-area-inset-bottom) + 86px));
+        bottom: max(132px, calc(env(safe-area-inset-bottom) + 112px));
         border-radius: 22px;
         font-size: clamp(1.02rem, 4.45vw, 1.34rem);
         backdrop-filter: none;
@@ -1473,6 +1531,11 @@
     <input class="photo-input" id="photoInput" type="file" accept="image/*" hidden />
   </main>
 
+  <div class="photo-lightbox" id="photoLightbox" aria-hidden="true" role="dialog" aria-label="Shahaf's photo">
+    <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close photo">×</button>
+    <img id="lightboxPhoto" alt="Shahaf smiling, full size" />
+  </div>
+
   <script>
     const stage = document.getElementById("stage");
     const cover = document.getElementById("cover");
@@ -1496,6 +1559,9 @@
     const finalActions = document.getElementById("finalActions");
     const portraitFrame = document.getElementById("portraitFrame");
     const realPhoto = document.getElementById("realPhoto");
+    const photoLightbox = document.getElementById("photoLightbox");
+    const lightboxPhoto = document.getElementById("lightboxPhoto");
+    const lightboxClose = document.getElementById("lightboxClose");
     const canvas = document.getElementById("skyCanvas");
     const ctx = canvas.getContext("2d", { alpha: true });
     const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1504,7 +1570,7 @@
       // Put final files in /assets and set these paths, for example:
       // photo: "assets/shahaf-smile.jpg",
       // music: "assets/song.mp3",
-      photo: "assets/shahaf_smile.jpeg",
+      photo: "assets/shahaf-smile.jpeg",
       music: "assets/song.mp3",
       musicVolume: 0.72
     };
@@ -2532,13 +2598,27 @@
     function setPhotoSource(src, cleanup) {
       realPhoto.onload = () => {
         portraitFrame.classList.add("has-photo");
+        lightboxPhoto.src = realPhoto.currentSrc || realPhoto.src;
         if (cleanup) cleanup();
       };
       realPhoto.onerror = () => {
         portraitFrame.classList.remove("has-photo");
+        lightboxPhoto.removeAttribute("src");
         if (cleanup) cleanup();
       };
       realPhoto.src = src;
+    }
+
+    function openPhotoLightbox() {
+      if (!portraitFrame.classList.contains("has-photo") || !realPhoto.src) return;
+      lightboxPhoto.src = realPhoto.currentSrc || realPhoto.src;
+      photoLightbox.classList.add("visible");
+      photoLightbox.setAttribute("aria-hidden", "false");
+    }
+
+    function closePhotoLightbox() {
+      photoLightbox.classList.remove("visible");
+      photoLightbox.setAttribute("aria-hidden", "true");
     }
 
     function applyFinalAssets() {
@@ -2552,7 +2632,7 @@
       if (finalAssets.music) {
         embeddedMusic = new Audio(finalAssets.music);
         embeddedMusic.preload = "auto";
-        embeddedMusic.loop = false;
+        embeddedMusic.loop = true;
         embeddedMusic.volume = 0;
         embeddedMusic.addEventListener("error", () => {
           embeddedMusic = null;
@@ -2584,6 +2664,14 @@
     coverPhotoBtn.addEventListener("click", () => photoInput.click());
     finalPhotoBtn.addEventListener("click", () => photoInput.click());
     photoInput.addEventListener("change", event => handlePhoto(event.target.files[0]));
+    portraitFrame.addEventListener("click", openPhotoLightbox);
+    lightboxClose.addEventListener("click", closePhotoLightbox);
+    photoLightbox.addEventListener("click", event => {
+      if (event.target === photoLightbox) closePhotoLightbox();
+    });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") closePhotoLightbox();
+    });
     window.addEventListener("pointermove", event => {
       state.pointer.x = event.clientX / state.w;
       state.pointer.y = event.clientY / state.h;
