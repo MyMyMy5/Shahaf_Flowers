@@ -465,9 +465,9 @@
     }
 
     .hero-flower.retreat {
-      opacity: 0.28;
-      transform: translateX(-50%) translateY(46px) scale(0.72);
-      transition-duration: 1100ms;
+      opacity: 0.3;
+      transform: translateX(-50%) translateY(42px) scale(0.72);
+      transition-duration: 1200ms;
     }
 
     .hero-flower-svg {
@@ -1169,30 +1169,38 @@
 
     @media (max-width: 640px) {
       .caption {
-        top: 34%;
-        width: min(540px, calc(100vw - 28px));
+        top: 33%;
+        width: min(620px, calc(100vw - 22px));
       }
 
       .caption[data-mood="flowers"] {
-        top: 38%;
+        top: 36%;
       }
 
       .caption[data-mood="rose"] {
-        top: 29%;
+        top: 28%;
       }
 
       .caption[data-mood="vow"] .caption-text {
-        font-size: clamp(2.35rem, 11vw, 4.2rem);
+        font-size: clamp(2.65rem, 12.2vw, 4.65rem);
       }
 
       .caption[data-mood="breath"] .caption-text,
       .caption[data-mood="aside"] .caption-text,
       .caption[data-mood="flowers"] .caption-text {
-        font-size: clamp(1.45rem, 6.6vw, 2.28rem);
+        font-size: clamp(1.68rem, 7.45vw, 2.72rem);
+        line-height: 1.05;
       }
 
       .caption[data-mood="rose"] .caption-text {
-        font-size: clamp(1.85rem, 8.2vw, 3.15rem);
+        font-size: clamp(2.08rem, 9.15vw, 3.55rem);
+        line-height: 1.02;
+      }
+
+      .moon {
+        top: clamp(24px, 5.2svh, 58px);
+        right: clamp(22px, 7vw, 64px);
+        width: clamp(94px, 24vw, 136px);
       }
 
       .garden {
@@ -1515,7 +1523,7 @@
     function textAura(scene) {
       if (!scene.aura || reducedMotion) return;
       const y = scene.moodName === "vow" ? state.h * 0.38 : state.h * 0.44;
-      const pulses = state.isPhone ? 2 : 3;
+      const pulses = 3;
       for (let i = 0; i < pulses; i++) {
         setTimeout(() => createBurst(state.w * (0.42 + Math.random() * 0.16), y + (Math.random() - 0.5) * 70, 16, scene.aura, 0.34), i * 220);
       }
@@ -1802,7 +1810,7 @@
 
     function setupCanvas() {
       state.isPhone = matchMedia("(max-width: 700px)").matches;
-      state.dpr = Math.min(devicePixelRatio || 1, state.isPhone ? 1.35 : 1.75);
+      state.dpr = Math.min(devicePixelRatio || 1, 1.75);
       const rect = canvas.getBoundingClientRect();
       state.w = Math.max(1, Math.floor(rect.width));
       state.h = Math.max(1, Math.floor(rect.height));
@@ -1817,8 +1825,8 @@
 
     function seedCanvas() {
       const mobile = state.isPhone;
-      const rainCount = mobile ? 88 : 166;
-      const petalChance = mobile ? 0.16 : 0.22;
+      const rainCount = mobile ? 148 : 166;
+      const petalChance = mobile ? 0.22 : 0.22;
       state.rainStars = Array.from({ length: rainCount }, (_, index) => {
         const x = Math.random() * state.w;
         const y = Math.random() * state.h;
@@ -1845,14 +1853,14 @@
           color: Math.random() > 0.5 ? "rgba(255,180,205," : "rgba(255,226,166,"
         };
       });
-      state.fireflies = Array.from({ length: mobile ? 8 : 22 }, () => ({
+      state.fireflies = Array.from({ length: mobile ? 18 : 22 }, () => ({
         x: Math.random() * state.w,
         y: state.h * (0.45 + Math.random() * 0.45),
         vx: -0.25 + Math.random() * 0.5,
         vy: -0.2 + Math.random() * 0.4,
         phase: Math.random() * Math.PI * 2
       }));
-      state.petals = Array.from({ length: mobile ? 12 : 34 }, () => ({
+      state.petals = Array.from({ length: mobile ? 28 : 34 }, () => ({
         x: Math.random() * state.w,
         y: state.h + Math.random() * 180,
         size: 4 + Math.random() * 9,
@@ -1879,7 +1887,7 @@
       octx.fillStyle = "#fff";
       octx.fillText("Shahaf", w / 2, h / 2);
       const data = octx.getImageData(0, 0, w, h).data;
-      const step = state.isPhone ? 9 : 6;
+      const step = state.isPhone ? 7 : 6;
       const points = [];
       for (let y = 0; y < h; y += step) {
         for (let x = 0; x < w; x += step) {
@@ -1888,7 +1896,7 @@
           }
         }
       }
-      const cap = state.isPhone ? 520 : 1400;
+      const cap = state.isPhone ? 980 : 1400;
       state.nameParticles = points.sort(() => Math.random() - 0.5).slice(0, cap).map((p, i) => ({
         sx: state.w * (0.12 + Math.random() * 0.76),
         sy: state.h * (0.72 + Math.random() * 0.18),
@@ -1910,9 +1918,9 @@
       }
       const dt = Math.min(32, now - lastTime);
       lastTime = now;
-      if (!state.halfRateCanvas && state.isPhone && running && dt > 24) {
+      if (!state.halfRateCanvas && state.isPhone && running && dt > 34) {
         state.slowFrames++;
-        if (state.slowFrames > 18) state.halfRateCanvas = true;
+        if (state.slowFrames > 36) state.halfRateCanvas = true;
       } else if (state.slowFrames > 0) {
         state.slowFrames--;
       }
@@ -1962,7 +1970,7 @@
       shift.progress = magic;
       const rainA = shift.active ? clamp(1 - magic * 1.12, 0, 1) : clamp(1 - mood * 1.35, 0, 1);
       const starA = shift.active ? clamp(magic * 1.12, 0, 1) : clamp((mood - 0.18) / 0.82, 0, 1);
-      const drawSharpStars = !state.isPhone || state.frame % 3 === 0;
+      const drawSharpStars = true;
 
       ctx.lineCap = "round";
       if (rainA > 0.02) {
@@ -2050,7 +2058,7 @@
       for (const p of state.rainStars) {
         if (p.magicA <= 0.02) continue;
         if (p.magicKind === "petal") {
-          p.rot += p.spin * (state.isPhone ? 0.7 : 1);
+          p.rot += p.spin;
           drawMagicPetal(p.magicX + p.drift * rawMagic * 20, p.magicY, p, p.magicA);
         } else {
           drawMagicStar(p.magicX, p.magicY, p.size, p.magicA, now, p.tw, drawSharpStars);
@@ -2130,12 +2138,10 @@
         if (f.y < h * 0.34) f.y = h * 0.7;
         if (f.y > h + 20) f.y = h * 0.42;
         const glow = 0.45 + Math.sin(now * 0.004 + f.phase) * 0.28;
-        if (!state.isPhone) {
-          ctx.fillStyle = `rgba(255,205,101,${glow * mood * 0.18})`;
-          ctx.beginPath();
-          ctx.arc(f.x, f.y, 8 + glow * 6, 0, Math.PI * 2);
-          ctx.fill();
-        }
+        ctx.fillStyle = `rgba(255,205,101,${glow * mood * 0.18})`;
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, 8 + glow * 6, 0, Math.PI * 2);
+        ctx.fill();
         ctx.fillStyle = `rgba(255,225,138,${glow * mood})`;
         ctx.beginPath();
         ctx.arc(f.x, f.y, 1.4 + glow * 1.7, 0, Math.PI * 2);
@@ -2155,12 +2161,10 @@
         p.x = p.sx + (p.tx - p.sx) * t + drift;
         p.y = p.sy + (p.ty - p.sy) * t - Math.sin(t * Math.PI) * 76;
         const tw = 0.65 + Math.sin(now * 0.006 + p.phase) * 0.25;
-        if (!state.isPhone) {
-          ctx.fillStyle = `rgba(255,190,126,${t * tw * 0.14})`;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r * 3.4, 0, Math.PI * 2);
-          ctx.fill();
-        }
+        ctx.fillStyle = `rgba(255,190,126,${t * tw * 0.14})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r * 3.4, 0, Math.PI * 2);
+        ctx.fill();
         ctx.fillStyle = `rgba(255,231,164,${0.1 + t * tw * 0.72})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r * (0.8 + tw * 0.5), 0, Math.PI * 2);
@@ -2192,8 +2196,8 @@
     }
 
     function createBurst(x, y, count = 36, palette = "gold", power = 1) {
-      if (state.fireworks.length > (state.isPhone ? 180 : 460)) return;
-      const particleCount = Math.min(count, state.isPhone ? 24 : 60);
+      if (state.fireworks.length > (state.isPhone ? 340 : 460)) return;
+      const particleCount = Math.min(count, state.isPhone ? 44 : 60);
       const colors = palette === "rose"
         ? ["#ffc1d6", "#ff84aa", "#fff0b3", "#c8b1ff"]
         : ["#fff1ac", "#ffd178", "#ffb1cb", "#b9a4ff"];
@@ -2205,7 +2209,7 @@
           vx: Math.cos(a) * s,
           vy: Math.sin(a) * s,
           life: 1,
-          decay: (state.isPhone ? 0.016 : 0.012) + Math.random() * 0.014,
+          decay: (state.isPhone ? 0.013 : 0.012) + Math.random() * 0.014,
           color: colors[i % colors.length],
           r: 1.1 + Math.random() * 2.1
         });
@@ -2226,14 +2230,12 @@
           continue;
         }
         ctx.globalAlpha = b.life;
-        if (!state.isPhone) {
-          ctx.fillStyle = b.color;
-          ctx.globalAlpha = b.life * 0.18;
-          ctx.beginPath();
-          ctx.arc(b.x, b.y, b.r * 4.2, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.globalAlpha = b.life;
-        }
+        ctx.fillStyle = b.color;
+        ctx.globalAlpha = b.life * 0.18;
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r * 4.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = b.life;
         ctx.fillStyle = b.color;
         ctx.beginPath();
         ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
@@ -2392,7 +2394,7 @@
 
     function pointerSpark(x, y) {
       const now = performance.now();
-      const interval = state.isPhone ? 180 : 80;
+      const interval = state.isPhone ? 95 : 80;
       if (now - lastSpark < interval || reducedMotion) return;
       lastSpark = now;
       if (!running && !finalActions.classList.contains("visible")) return;
