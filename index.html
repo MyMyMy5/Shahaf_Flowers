@@ -1128,6 +1128,75 @@
       transform: translateX(-50%) translateY(0);
     }
 
+    .ending-badges {
+      position: absolute;
+      z-index: 21;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 500ms ease, visibility 500ms;
+    }
+
+    .ending-badges.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .ending-badge {
+      position: absolute;
+      top: clamp(50%, 56svh, 62%);
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 9px 14px 10px;
+      border: 2px solid rgba(255, 246, 226, 0.78);
+      border-radius: 999px;
+      color: #321326;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255,255,255,0.92), transparent 34%),
+        linear-gradient(135deg, #ffe8a6, #ff9ec0 58%, #c9b2ff);
+      box-shadow:
+        0 14px 34px rgba(0,0,0,0.28),
+        0 0 36px rgba(255, 187, 213, 0.32);
+      font-size: clamp(0.92rem, 2.9vw, 1.16rem);
+      font-weight: 930;
+      letter-spacing: -0.015em;
+      text-align: center;
+      white-space: nowrap;
+      transform: rotate(var(--badge-tilt)) scale(0.72);
+      opacity: 0;
+    }
+
+    .ending-badge.left {
+      left: clamp(10px, 3.2vw, 34px);
+    }
+
+    .ending-badge.right {
+      right: clamp(10px, 3.2vw, 34px);
+    }
+
+    .ending-badge[dir="rtl"] {
+      font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    .ending-badges.visible .ending-badge {
+      animation:
+        badge-pop 760ms cubic-bezier(.2, 1.28, .25, 1) var(--badge-delay) forwards,
+        badge-wiggle 3.4s ease-in-out calc(var(--badge-delay) + 900ms) infinite alternate;
+    }
+
+    @keyframes badge-pop {
+      0% { opacity: 0; transform: rotate(calc(var(--badge-tilt) - 10deg)) translateY(18px) scale(0.62); }
+      72% { opacity: 1; transform: rotate(calc(var(--badge-tilt) + 2deg)) translateY(-3px) scale(1.08); }
+      100% { opacity: 1; transform: rotate(var(--badge-tilt)) translateY(0) scale(1); }
+    }
+
+    @keyframes badge-wiggle {
+      to { transform: rotate(calc(var(--badge-tilt) * -0.55)) translateY(-2px) scale(1.02); }
+    }
+
     .final-actions {
       position: fixed;
       z-index: 32;
@@ -1165,6 +1234,10 @@
       clip: rect(0,0,0,0);
       white-space: nowrap;
       border: 0;
+    }
+
+    [hidden] {
+      display: none !important;
     }
 
     @media (max-width: 640px) {
@@ -1283,6 +1356,23 @@
         backdrop-filter: none;
       }
 
+      .ending-badge {
+        max-width: 43vw;
+        min-height: 34px;
+        padding: 8px 11px 9px;
+        font-size: clamp(0.82rem, 3.6vw, 1.02rem);
+      }
+
+      .ending-badge.left {
+        top: 53%;
+        left: 9px;
+      }
+
+      .ending-badge.right {
+        top: 62%;
+        right: 9px;
+      }
+
       .final-actions {
         width: calc(100vw - 22px);
         justify-content: center;
@@ -1363,6 +1453,11 @@
 
     <p class="final-line" id="finalLine">I love you. I'm with you. And everything will be okay.</p>
 
+    <div class="ending-badges" id="endingBadges" aria-hidden="true">
+      <span class="ending-badge left" style="--badge-tilt:-8deg;--badge-delay:120ms">fuck צהל</span>
+      <span class="ending-badge right" style="--badge-tilt:7deg;--badge-delay:360ms" dir="rtl">אנחנו נעבור את זה</span>
+    </div>
+
     <div class="hero-flower" id="heroFlower" aria-hidden="true"></div>
 
     <div class="garden" id="garden" aria-hidden="true">
@@ -1397,6 +1492,7 @@
     const nameReveal = document.getElementById("nameReveal");
     const photoScene = document.getElementById("photoScene");
     const finalLine = document.getElementById("finalLine");
+    const endingBadges = document.getElementById("endingBadges");
     const finalActions = document.getElementById("finalActions");
     const portraitFrame = document.getElementById("portraitFrame");
     const realPhoto = document.getElementById("realPhoto");
@@ -1404,9 +1500,20 @@
     const ctx = canvas.getContext("2d", { alpha: true });
     const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    const finalAssets = {
+      // Put final files in /assets and set these paths, for example:
+      // photo: "assets/shahaf-smile.jpg",
+      // music: "assets/song.mp3",
+      photo: "assets/shahaf-smile.jpg",
+      music: "",
+      musicVolume: 0.72
+    };
+
     let runId = 0;
     let running = false;
     let audio = null;
+    let embeddedMusic = null;
+    let embeddedMusicFade = 0;
     let mood = 0;
     let lastTime = performance.now();
     let lastSpark = 0;
@@ -2303,6 +2410,7 @@
       if (scene.final) {
         photoScene.classList.add("final");
         finalLine.classList.add("visible");
+        endingBadges.classList.add("visible");
         finalActions.classList.add("visible");
         for (let i = 0; i < 4; i++) {
           setTimeout(() => createBurst(state.w * (0.2 + Math.random() * 0.6), state.h * (0.18 + Math.random() * 0.32), 36, Math.random() > 0.5 ? "gold" : "rose", 0.52), i * 520);
@@ -2316,9 +2424,11 @@
       const id = runId;
       running = true;
       cover.classList.add("hidden");
+      startEmbeddedMusic();
       buildGarden(true);
       finalActions.classList.remove("visible");
       finalLine.classList.remove("visible");
+      endingBadges.classList.remove("visible");
       photoScene.classList.remove("visible");
       photoScene.classList.remove("final");
       nameReveal.classList.remove("visible");
@@ -2372,6 +2482,7 @@
     }
 
     async function toggleSound() {
+      if (embeddedMusic) return;
       if (!audio) audio = setupAudio();
       if (!audio) return;
       if (audio.ac.state === "suspended") await audio.ac.resume();
@@ -2384,12 +2495,73 @@
       finalSoundBtn.setAttribute("aria-pressed", String(audio.enabled));
     }
 
+    function fadeEmbeddedMusic(targetVolume, duration = 1600) {
+      if (!embeddedMusic) return;
+      cancelAnimationFrame(embeddedMusicFade);
+      const start = performance.now();
+      const initialVolume = embeddedMusic.volume;
+      const target = clamp(targetVolume, 0, 1);
+      function frame(now) {
+        const t = easeOutCubic(clamp((now - start) / duration, 0, 1));
+        embeddedMusic.volume = initialVolume + (target - initialVolume) * t;
+        if (t < 1) embeddedMusicFade = requestAnimationFrame(frame);
+      }
+      embeddedMusicFade = requestAnimationFrame(frame);
+    }
+
+    async function startEmbeddedMusic() {
+      if (!embeddedMusic) return;
+      try {
+        embeddedMusic.currentTime = 0;
+        embeddedMusic.volume = 0;
+        await embeddedMusic.play();
+        fadeEmbeddedMusic(finalAssets.musicVolume, 1800);
+      } catch (error) {
+        embeddedMusic = null;
+        coverSoundBtn.hidden = false;
+        finalSoundBtn.hidden = false;
+      }
+    }
+
+    function setPhotoSource(src, cleanup) {
+      realPhoto.onload = () => {
+        portraitFrame.classList.add("has-photo");
+        if (cleanup) cleanup();
+      };
+      realPhoto.onerror = () => {
+        portraitFrame.classList.remove("has-photo");
+        if (cleanup) cleanup();
+      };
+      realPhoto.src = src;
+    }
+
+    function applyFinalAssets() {
+      if (finalAssets.photo) {
+        setPhotoSource(finalAssets.photo);
+        coverPhotoBtn.hidden = true;
+        finalPhotoBtn.hidden = true;
+        photoInput.hidden = true;
+      }
+
+      if (finalAssets.music) {
+        embeddedMusic = new Audio(finalAssets.music);
+        embeddedMusic.preload = "auto";
+        embeddedMusic.loop = false;
+        embeddedMusic.volume = 0;
+        embeddedMusic.addEventListener("error", () => {
+          embeddedMusic = null;
+          coverSoundBtn.hidden = false;
+          finalSoundBtn.hidden = false;
+        }, { once: true });
+        coverSoundBtn.hidden = true;
+        finalSoundBtn.hidden = true;
+      }
+    }
+
     function handlePhoto(file) {
       if (!file || !file.type.startsWith("image/")) return;
       const url = URL.createObjectURL(file);
-      realPhoto.onload = () => URL.revokeObjectURL(url);
-      realPhoto.src = url;
-      portraitFrame.classList.add("has-photo");
+      setPhotoSource(url, () => URL.revokeObjectURL(url));
     }
 
     function pointerSpark(x, y) {
@@ -2420,11 +2592,15 @@
       resizeTimer = setTimeout(setupCanvas, 120);
     });
     document.addEventListener("visibilitychange", () => {
+      if (embeddedMusic && !embeddedMusic.paused) {
+        fadeEmbeddedMusic(document.hidden ? 0.02 : finalAssets.musicVolume, 600);
+      }
       if (audio && audio.enabled) {
         audio.master.gain.setTargetAtTime(document.hidden ? 0.01 : 0.1, audio.ac.currentTime, 0.6);
       }
     });
 
+    applyFinalAssets();
     setupCanvas();
     setMood(0);
     requestAnimationFrame(drawCanvas);
