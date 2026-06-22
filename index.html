@@ -1101,14 +1101,14 @@
       position: absolute;
       z-index: 19;
       left: 50%;
-      bottom: clamp(36px, 7svh, 72px);
+      bottom: clamp(86px, 13svh, 132px);
       width: min(760px, calc(100vw - 32px));
       transform: translateX(-50%) translateY(16px);
       opacity: 0;
       visibility: hidden;
       color: #fff2d5;
       text-align: center;
-      font-size: clamp(1.05rem, 3.1vw, 1.65rem);
+      font-size: clamp(1.02rem, 2.85vw, 1.56rem);
       line-height: 1.25;
       letter-spacing: -0.035em;
       font-weight: 820;
@@ -1350,9 +1350,9 @@
       }
 
       .final-line {
-        bottom: max(58px, env(safe-area-inset-bottom));
+        bottom: max(104px, calc(env(safe-area-inset-bottom) + 86px));
         border-radius: 22px;
-        font-size: clamp(1.08rem, 4.95vw, 1.48rem);
+        font-size: clamp(1.02rem, 4.45vw, 1.34rem);
         backdrop-filter: none;
       }
 
@@ -1419,8 +1419,8 @@
         <p class="cover-sub">Tap once. The sky will handle the rest.</p>
         <div class="start-row">
           <button class="star-btn" id="startBtn" type="button">Open when you're ready</button>
-          <button class="tiny-btn" id="coverSoundBtn" type="button" aria-pressed="false">♪</button>
-          <button class="tiny-btn" id="coverPhotoBtn" type="button">+ photo</button>
+          <button class="tiny-btn" id="coverSoundBtn" type="button" aria-pressed="false" hidden>♪</button>
+          <button class="tiny-btn" id="coverPhotoBtn" type="button" hidden>+ photo</button>
         </div>
       </div>
     </section>
@@ -1451,7 +1451,7 @@
       </div>
     </section>
 
-    <p class="final-line" id="finalLine">I love you. I'm with you. And everything will be okay.</p>
+    <p class="final-line" id="finalLine">I love you, and I am with you. You are my little princess, and don't ever forget that.</p>
 
     <div class="ending-badges" id="endingBadges" aria-hidden="true">
       <span class="ending-badge left" style="--badge-tilt:-8deg;--badge-delay:120ms">fuck צהל</span>
@@ -1464,13 +1464,13 @@
       <div class="garden-glow"></div>
     </div>
 
-    <div class="final-actions" id="finalActions">
+    <div class="final-actions" id="finalActions" hidden>
       <button class="tiny-btn" id="replayBtn" type="button">Replay</button>
-      <button class="tiny-btn" id="finalPhotoBtn" type="button">Use real photo</button>
-      <button class="tiny-btn" id="finalSoundBtn" type="button" aria-pressed="false">Sound</button>
+      <button class="tiny-btn" id="finalPhotoBtn" type="button" hidden>Use real photo</button>
+      <button class="tiny-btn" id="finalSoundBtn" type="button" aria-pressed="false" hidden>Sound</button>
     </div>
 
-    <input class="photo-input" id="photoInput" type="file" accept="image/*" />
+    <input class="photo-input" id="photoInput" type="file" accept="image/*" hidden />
   </main>
 
   <script>
@@ -1504,8 +1504,8 @@
       // Put final files in /assets and set these paths, for example:
       // photo: "assets/shahaf-smile.jpg",
       // music: "assets/song.mp3",
-      photo: "assets/shahaf-smile.jpg",
-      music: "",
+      photo: "assets/shahaf_smile.jpeg",
+      music: "assets/song.mp3",
       musicVolume: 0.72
     };
 
@@ -1546,7 +1546,7 @@
       { t: 3300, mood: 0.08, text: "Before anything else...\nI want you to know something.", moodName: "breath" },
       { t: 3600, mood: 0.15, text: "You are not alone.", moodName: "vow", aura: "gold" },
       { t: 5200, mood: 0.22, text: "Not today.\nNot when things feel heavy.\nNot when your mind is tired.\nNot when the world forgets how gentle it should be with you.", moodName: "breath" },
-      { t: 3500, mood: 0.3, text: "I'm here...", moodName: "vow", aura: "rose", weather: "begin" },
+      { t: 3500, mood: 0.3, text: "I'm here...", moodName: "vow", aura: "rose", auraBurst: { pulses: 9, count: 38, power: 0.62, spread: 0.58, vertical: 170, cadence: 180, alternate: true }, weather: "begin" },
       { t: 5200, mood: 0.38, text: "And yes, I know...\nthis is technically a tiny website,\nso maybe I'm being a little dramatic...", moodName: "aside" },
       { t: 4300, mood: 0.47, text: "But I had to do something.\nBecause someone very important to me\nhad a rough day.", moodName: "breath" },
       { t: 5400, mood: 0.56, text: "And I know how much you like flowers.\nI wish I could hand them to you right now...", moodName: "flowers", heroFlowerPreview: true },
@@ -1630,9 +1630,17 @@
     function textAura(scene) {
       if (!scene.aura || reducedMotion) return;
       const y = scene.moodName === "vow" ? state.h * 0.38 : state.h * 0.44;
-      const pulses = 3;
+      const pulses = scene.auraBurst?.pulses || 3;
+      const count = scene.auraBurst?.count || 16;
+      const power = scene.auraBurst?.power || 0.34;
+      const spread = scene.auraBurst?.spread || 0.16;
+      const vertical = scene.auraBurst?.vertical || 70;
+      const cadence = scene.auraBurst?.cadence || 220;
       for (let i = 0; i < pulses; i++) {
-        setTimeout(() => createBurst(state.w * (0.42 + Math.random() * 0.16), y + (Math.random() - 0.5) * 70, 16, scene.aura, 0.34), i * 220);
+        const palette = scene.auraBurst?.alternate && i % 2 ? "gold" : scene.aura;
+        const x = state.w * (0.5 - spread / 2 + Math.random() * spread);
+        const yy = y + (Math.random() - 0.5) * vertical;
+        setTimeout(() => createBurst(x, yy, count, palette, power), i * cadence);
       }
     }
 
@@ -2518,8 +2526,6 @@
         fadeEmbeddedMusic(finalAssets.musicVolume, 1800);
       } catch (error) {
         embeddedMusic = null;
-        coverSoundBtn.hidden = false;
-        finalSoundBtn.hidden = false;
       }
     }
 
@@ -2550,8 +2556,6 @@
         embeddedMusic.volume = 0;
         embeddedMusic.addEventListener("error", () => {
           embeddedMusic = null;
-          coverSoundBtn.hidden = false;
-          finalSoundBtn.hidden = false;
         }, { once: true });
         coverSoundBtn.hidden = true;
         finalSoundBtn.hidden = true;
